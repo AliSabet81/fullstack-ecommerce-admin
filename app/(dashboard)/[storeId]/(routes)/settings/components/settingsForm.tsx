@@ -122,7 +122,11 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
         </form>
       </Form>
       <Separator />
-      <ApiAlert title="test" descrition="test-desc" varient={"public"} />
+      <ApiAlert
+        title="NEXT_PUBLIC_API_URL"
+        descrition="test-desc"
+        varient={"public"}
+      />
     </>
   );
 };
