@@ -1,5 +1,6 @@
 "use client";
 import AlertModal from "@/components/modals/alertModal";
+import { ApiAlert } from "@/components/ui/apiAlert";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -120,6 +121,8 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
           </Button>
         </form>
       </Form>
+      <Separator />
+      <ApiAlert title="test" descrition="test-desc" varient={"public"} />
     </>
   );
 };
