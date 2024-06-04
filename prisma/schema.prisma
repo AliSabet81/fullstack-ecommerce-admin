@@ -14,7 +14,7 @@ datasource db {
   relationMode = "prisma"
 }
 
-model store {
+model Store {
   id           String       @id @default(uuid())
   name         String      
   userId       String
