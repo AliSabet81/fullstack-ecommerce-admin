@@ -13,12 +13,12 @@ import {
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { useOrigin } from "@/hooks/useOrigin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Store } from "@prisma/client";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import router from "next/router";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -40,7 +40,7 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const origin = useOrigin();
   const form = useForm<SettingFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData,
@@ -124,7 +124,7 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
       <Separator />
       <ApiAlert
         title="NEXT_PUBLIC_API_URL"
-        descrition="test-desc"
+        descrition={`${origin}/api/${params.storeId}`}
         varient={"public"}
       />
     </>
