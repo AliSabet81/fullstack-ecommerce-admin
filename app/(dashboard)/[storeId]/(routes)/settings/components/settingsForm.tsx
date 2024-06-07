@@ -69,6 +69,7 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
       toast.error("Make sure to removed all products and categories first.");
     } finally {
       setLoading(false);
+      setOpen(false);
     }
   };
 
