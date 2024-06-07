@@ -57,7 +57,7 @@ const ImageUpload: FC<ImageUploadProps> = ({
           </div>
         ))}
       </div>
-      <CldUploadWidget onUploadAdded={onUpload} uploadPreset="x9ecghza">
+      <CldUploadWidget onUpload={onUpload} uploadPreset="x9ecghza">
         {({ open }) => {
           const onClick = () => {
             open();
@@ -70,6 +70,7 @@ const ImageUpload: FC<ImageUploadProps> = ({
               onClick={onClick}
             >
               <ImagePlus className="h-4 w-4 mr-2" />
+              Upload an Image
             </Button>
           );
         }}
