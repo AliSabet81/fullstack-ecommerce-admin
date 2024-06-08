@@ -53,3 +53,25 @@ export async function POST(
     return new NextResponse("Internal error", { status: 500 });
   }
 }
+
+export async function GET(
+  req: Request,
+  { params }: { params: { storeId: string } }
+) {
+  try {
+    if (!params.storeId) {
+      return new NextResponse("Store Id is required", { status: 400 });
+    }
+
+    const colors = await prismadb.color.findMany({
+      where: {
+        storeId: params.storeId,
+      },
+    });
+
+    return NextResponse.json(colors);
+  } catch (error) {
+    console.log("[COLORS_GET]", error);
+    return new NextResponse("Internal error", { status: 500 });
+  }
+}
