@@ -1,5 +1,6 @@
 "use client";
 import AlertModal from "@/components/modals/alertModal";
+import { ApiAlert } from "@/components/ui/apiAlert";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,12 +13,12 @@ import {
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { useOrigin } from "@/hooks/useOrigin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Store } from "@prisma/client";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import router from "next/router";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -31,7 +32,7 @@ const formSchema = z.object({
   name: z.string().min(1),
 });
 
-type SettingFormValues = z.infer<typeof formSchema>;
+type SettingsFormValues = z.infer<typeof formSchema>;
 
 export const SettingsForm = ({ initialData }: SettingsFormProps) => {
   const params = useParams();
@@ -39,13 +40,13 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const form = useForm<SettingFormValues>({
+  const origin = useOrigin();
+  const form = useForm<SettingsFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData,
   });
 
-  const onSubmit = async (data: SettingFormValues) => {
+  const onSubmit = async (data: SettingsFormValues) => {
     try {
       setLoading(true);
       await axios.patch(`/api/stores/${params.storeId}`, data);
@@ -68,6 +69,7 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
       toast.error("Make sure to removed all products and categories first.");
     } finally {
       setLoading(false);
+      setOpen(false);
     }
   };
 
@@ -120,6 +122,12 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
           </Button>
         </form>
       </Form>
+      <Separator />
+      <ApiAlert
+        title="NEXT_PUBLIC_API_URL"
+        descrition={`${origin}/api/${params.storeId}`}
+        varient={"public"}
+      />
     </>
   );
 };
