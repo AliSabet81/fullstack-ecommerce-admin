@@ -47,7 +47,7 @@ export async function PATCH(
     }
 
     if (!params.colorId) {
-      return new NextResponse("Size id is required", { status: 400 });
+      return new NextResponse("Color id is required", { status: 400 });
     }
 
     if (!params.storeId) {
@@ -98,7 +98,7 @@ export async function DELETE(
     }
 
     if (!params.colorId) {
-      return new NextResponse("Size id is required", { status: 400 });
+      return new NextResponse("Color id is required", { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({
@@ -112,13 +112,13 @@ export async function DELETE(
       return new NextResponse("Unauthorized", { status: 403 });
     }
 
-    const size = await prismadb.size.deleteMany({
+    const color = await prismadb.color.deleteMany({
       where: {
         id: params.colorId,
       },
     });
 
-    return NextResponse.json(size);
+    return NextResponse.json(color);
   } catch (error) {
     console.log("[COLOR_DELETE]", error);
     return new NextResponse("Internal error", { status: 500 });
