@@ -111,11 +111,9 @@ export const ProductForm = ({
       await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
       router.push(`/${params.storeId}/products`);
       router.refresh();
-      toast.success("Billboard deleted");
+      toast.success("Product deleted");
     } catch (error) {
-      toast.error(
-        "Make sure to removed all categories using this billboard first."
-      );
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
       setOpen(false);
