@@ -23,12 +23,16 @@ export async function POST(
     return new NextResponse("Product ids are required", { status: 400 });
   }
 
+  //   find all of the products that have this "productIds"
   const products = await prismadb.product.findMany({
     where: {
-      id: { in: productIds },
+      id: {
+        in: productIds,
+      },
     },
   });
 
+  //   to send to the stripe
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
   products.forEach((product) => {
@@ -39,7 +43,7 @@ export async function POST(
         product_data: {
           name: product.name,
         },
-        unit_amount: product.price.toNumber() * 100,
+        unit_amount: product.price.toNumber() * 100, // * by 100 coz price is in decimal.
       },
     });
   });
