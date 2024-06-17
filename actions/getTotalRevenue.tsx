@@ -1,5 +1,4 @@
 import prismadb from "@/lib/prismadb";
-import React from "react";
 
 const getTotalRevenue = async (storeId: string) => {
   const paidOrders = await prismadb.order.findMany({

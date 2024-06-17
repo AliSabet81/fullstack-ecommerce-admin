@@ -1,3 +1,5 @@
+import getSalesCount from "@/actions/getSalesCount";
+import getTotalRevenue from "@/actions/getTotalRevenue";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
@@ -11,7 +13,7 @@ interface DashboardPageProps {
 
 const DashboardPage: React.FC<DashboardPageProps> = async ({ params }) => {
   const totalRevenue = await getTotalRevenue(params.storeId);
-  const salesCount = () => {};
+  const salesCount = await getSalesCount(params.storeId);
   const stockCount = () => {};
 
   return (
@@ -28,7 +30,9 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({ params }) => {
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatter.format(100)}</div>
+              <div className="text-2xl font-bold">
+                {formatter.format(totalRevenue)}
+              </div>
             </CardContent>
           </Card>
           <Card>
@@ -37,7 +41,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({ params }) => {
               <CreditCard className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+25</div>
+              <div className="text-2xl font-bold">+{salesCount}</div>
             </CardContent>
           </Card>
           <Card>
