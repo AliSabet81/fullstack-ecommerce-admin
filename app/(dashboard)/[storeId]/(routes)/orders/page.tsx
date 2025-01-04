@@ -21,21 +21,23 @@ const OrdersPage = async ({ params }: { params: { storeId: string } }) => {
     },
   });
 
-  const formatedOrders: OrderColumn[] = orders.map((item) => ({
-    id: item.id,
-    phone: item.phone,
-    address: item.address,
-    products: item.orderItems
-      .map((orderItem) => orderItem.product.name)
-      .join(", "),
-    totalPrice: formatter.format(
-      item.orderItems.reduce((total, item) => {
-        return total + Number(item.product.price);
-      }, 0)
-    ),
-    isPaid: item.isPaid,
-    createdAt: format(item.createdAt, "MMMM do, yyyy"),
-  }));
+  const formatedOrders: OrderColumn[] = orders.map((item) => {
+    return {
+      id: item.id,
+      phone: item.phone,
+      address: item.address,
+      products: item.orderItems
+        .map((orderItem) => orderItem.product.name + ` (${orderItem.quantity})`)
+        .join(", "),
+      totalPrice: formatter.format(
+        item.orderItems.reduce((total, item) => {
+          return total + Number(item.product.price) * item.quantity;
+        }, 0)
+      ),
+      isPaid: item.isPaid,
+      createdAt: format(item.createdAt, "MMMM do, yyyy"),
+    };
+  });
 
   return (
     <div className="flex-col ">
