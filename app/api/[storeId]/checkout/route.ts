@@ -17,14 +17,17 @@ export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
-  const { productIds } = await req.json();
+  const { products } = await req.json();
 
-  if (!productIds || productIds.length === 0) {
-    return new NextResponse("Product ids are required", { status: 400 });
+  if (!products || products.length === 0) {
+    return new NextResponse("Products are required", { status: 400 });
   }
 
-  //   find all of the products that have this "productIds"
-  const products = await prismadb.product.findMany({
+  const productIds = products.map(
+    (product: { id: string; quantity: number }) => product.id
+  );
+
+  const dbProducts = await prismadb.product.findMany({
     where: {
       id: {
         in: productIds,
@@ -32,18 +35,23 @@ export async function POST(
     },
   });
 
-  //   to send to the stripe
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
-  products.forEach((product) => {
+  products.forEach((product: { id: string; quantity: number }) => {
+    const dbProduct = dbProducts.find((p) => p.id === product.id);
+
+    if (!dbProduct) {
+      throw new Error(`Product with ID ${product.id} not found`);
+    }
+
     line_items.push({
-      quantity: 1,
+      quantity: product.quantity,
       price_data: {
         currency: "USD",
         product_data: {
-          name: product.name,
+          name: dbProduct.name,
         },
-        unit_amount: product.price.toNumber() * 100, // * by 100 coz price is in decimal.
+        unit_amount: dbProduct.price.toNumber() * 100,
       },
     });
   });
@@ -53,12 +61,13 @@ export async function POST(
       storeId: params.storeId,
       isPaid: false,
       orderItems: {
-        create: productIds.map((productId: string) => ({
+        create: products.map((product: { id: string; quantity: number }) => ({
           product: {
             connect: {
-              id: productId,
+              id: product.id,
             },
           },
+          quantity: product.quantity,
         })),
       },
     },

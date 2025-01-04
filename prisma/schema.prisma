@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -23,15 +20,15 @@ model Store {
   sizes        Size[]       @relation("StoreToSize")
   colors       Color[]      @relation("StoreToColor")
   products     Product[]    @relation("StoreToProduct")
-  prders       Order[]      @relation("StoreToOrder")
+  orders       Order[]      @relation("StoreToOrder") 
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 }
 
-model Billboard{
+model Billboard {
   id           String       @id @default(uuid())
   storeId      String
-  store        Store        @relation("StoreBillBoard",fields: [storeId],references: [id])
+  store        Store        @relation("StoreBillBoard", fields: [storeId], references: [id])
   label        String
   imageUrl     String
   categories   Category[]   
@@ -44,9 +41,9 @@ model Billboard{
 model Category {
   id           String       @id @default(uuid())
   storeId      String
-  store        Store        @relation("StoreToCategory",fields: [storeId],references: [id])
+  store        Store        @relation("StoreToCategory", fields: [storeId], references: [id])
   billboardId  String
-  billboard    Billboard    @relation(fields: [billboardId],references: [id])
+  billboard    Billboard    @relation(fields: [billboardId], references: [id])
   products     Product[]    @relation("CategoryToProduct")
   name         String
   createdAt    DateTime     @default(now())
@@ -56,10 +53,10 @@ model Category {
   @@index([billboardId])
 }
 
-model Size{
+model Size {
   id           String       @id @default(uuid())
   storeId      String
-  store        Store        @relation("StoreToSize",fields: [storeId],references: [id])
+  store        Store        @relation("StoreToSize", fields: [storeId], references: [id])
   name         String
   value        String
   products     Product[]
@@ -69,10 +66,10 @@ model Size{
   @@index([storeId])
 }
 
-model Color{
+model Color {
   id           String       @id @default(uuid())
   storeId      String
-  store        Store        @relation("StoreToColor",fields: [storeId],references: [id])
+  store        Store        @relation("StoreToColor", fields: [storeId], references: [id])
   name         String
   value        String
   products     Product[]
@@ -82,20 +79,20 @@ model Color{
   @@index([storeId])
 }
 
-model Product{
+model Product {
   id           String       @id @default(uuid())
   storeId      String
-  store        Store        @relation("StoreToProduct",fields: [storeId],references: [id])
+  store        Store        @relation("StoreToProduct", fields: [storeId], references: [id])
   categoryId   String
-  category     Category     @relation("CategoryToProduct",fields: [categoryId],references: [id])
+  category     Category     @relation("CategoryToProduct", fields: [categoryId], references: [id])
   name         String
   price        Decimal
   isFeatured   Boolean      @default(false)
   isArchived   Boolean      @default(false)
   sizeId       String
-  size         Size         @relation(fields: [sizeId],references: [id])
+  size         Size         @relation(fields: [sizeId], references: [id])
   colorId      String
-  color        Color         @relation(fields: [colorId],references: [id])
+  color        Color        @relation(fields: [colorId], references: [id])
   images       Image[]
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
@@ -110,7 +107,7 @@ model Product{
 model Image {
   id           String       @id @default(uuid())
   productId    String
-  product      Product      @relation(fields: [productId],references: [id],onDelete: Cascade)
+  product      Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
   url          String
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
@@ -121,7 +118,7 @@ model Image {
 model Order {
   id           String       @id @default(uuid())
   storeId      String
-  store        Store        @relation("StoreToOrder",fields: [storeId],references: [id])
+  store        Store        @relation("StoreToOrder", fields: [storeId], references: [id])
   orderItems   OrderItem[]
   isPaid       Boolean      @default(false)
   phone        String       @default("")
@@ -135,9 +132,10 @@ model Order {
 model OrderItem {
   id           String       @id @default(uuid())
   orderId      String
-  order        Order        @relation(fields: [orderId],references: [id])
+  order        Order        @relation(fields: [orderId], references: [id])
   productId    String
-  product      Product      @relation(fields: [productId],references: [id])
+  product      Product      @relation(fields: [productId], references: [id])
+  quantity     Int          @default(1)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   
